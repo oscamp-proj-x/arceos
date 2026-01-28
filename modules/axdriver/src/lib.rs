@@ -79,6 +79,9 @@ mod virtio;
 #[cfg(feature = "ixgbe")]
 mod ixgbe;
 
+#[cfg(feature = "gpt")]
+mod gpt;
+
 #[cfg(feature = "dyn")]
 mod dyn_drivers;
 

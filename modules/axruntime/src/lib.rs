@@ -314,3 +314,10 @@ fn init_tls() {
     unsafe { axhal::asm::write_thread_pointer(main_tls.tls_ptr() as usize) };
     core::mem::forget(main_tls);
 }
+
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn __axplat_secondary_main() -> ! {
+    loop {
+        core::hint::spin_loop();
+    }
+}

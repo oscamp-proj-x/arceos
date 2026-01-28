@@ -2,16 +2,14 @@
 
 #![allow(unused_imports, dead_code)]
 
-use crate::AxDeviceEnum;
 use axdriver_base::DeviceType;
-
-#[cfg(feature = "virtio")]
-use crate::virtio::{self, VirtIoDevMeta};
-
 #[cfg(feature = "bus-pci")]
 use axdriver_pci::{DeviceFunction, DeviceFunctionInfo, PciRoot};
 
 pub use super::dummy::*;
+use crate::AxDeviceEnum;
+#[cfg(feature = "virtio")]
+use crate::virtio::{self, VirtIoDevMeta};
 
 pub trait DriverProbe {
     fn probe_global() -> Option<AxDeviceEnum> {
@@ -81,17 +79,28 @@ cfg_if::cfg_if! {
 
 cfg_if::cfg_if! {
     if #[cfg(block_dev = "sdmmc")] {
-        pub struct SdMmcDriver;
-        register_block_driver!(SdMmcDriver, axdriver_block::sdmmc::SdMmcDriver);
+        use axhal::mem::phys_to_virt;
+        use axdriver_block::sdmmc::SdMmcDriver;
+        use super::gpt::GptPartitionDev;
 
-        impl DriverProbe for SdMmcDriver {
+        pub struct SdMmcBlock;
+
+        register_block_driver!(SdMmcBlock, GptPartitionDev<SdMmcDriver>);
+
+        impl DriverProbe for SdMmcBlock {
             fn probe_global() -> Option<AxDeviceEnum> {
+                let root = axconfig::devices::ROOT_PARTITION_NAME.parse().unwrap();
+                info!("Probe SD MMC ROOT Part {:?} @ {:#x}", root, axconfig::devices::SDMMC_PADDR);
+
                 let sdmmc = unsafe {
-                    axdriver_block::sdmmc::SdMmcDriver::new(
-                        axhal::mem::phys_to_virt(axconfig::devices::SDMMC_PADDR.into()).into(),
+                    SdMmcDriver::new(
+                        phys_to_virt(axconfig::devices::SDMMC_PADDR.into()).into(),
                     )
                 };
-                Some(AxDeviceEnum::from_block(sdmmc))
+
+                GptPartitionDev::new(sdmmc, |part| part.name == root)
+                    .ok()
+                    .map(AxDeviceEnum::from_block)
             }
         }
     }
