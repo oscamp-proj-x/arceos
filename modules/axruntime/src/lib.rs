@@ -25,6 +25,9 @@ extern crate axlog;
 #[cfg(all(target_os = "none", not(test)))]
 mod lang_items;
 
+#[cfg(feature = "driver-dyn")]
+extern crate axklib_impl;
+
 #[cfg(feature = "smp")]
 mod mp;
 
@@ -315,9 +318,9 @@ fn init_tls() {
     core::mem::forget(main_tls);
 }
 
-#[unsafe(no_mangle)]
-pub unsafe extern "C" fn __axplat_secondary_main() -> ! {
-    loop {
-        core::hint::spin_loop();
-    }
-}
+// #[unsafe(no_mangle)]
+// pub unsafe extern "C" fn __axplat_secondary_main() -> ! {
+//     loop {
+//         core::hint::spin_loop();
+//     }
+// }

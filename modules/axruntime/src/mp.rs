@@ -12,6 +12,7 @@ static ENTERED_CPUS: AtomicUsize = AtomicUsize::new(1);
 #[allow(clippy::absurd_extreme_comparisons)]
 pub fn start_secondary_cpus(primary_cpu_id: usize) {
     let mut logic_cpu_id = 0;
+    info!("cpu num is {}", CPU_NUM);
     for i in 0..CPU_NUM {
         if i != primary_cpu_id && logic_cpu_id < CPU_NUM - 1 {
             let stack_top = virt_to_phys(VirtAddr::from(unsafe {

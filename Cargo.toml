@@ -17,6 +17,7 @@ members = [
     "modules/axruntime",
     "modules/axsync",
     "modules/axtask",
+    "modules/axklib-impl",
 
     "api/axfeat",
     "api/arceos_api",
@@ -66,6 +67,7 @@ axnet = { path = "modules/axnet" }
 axruntime = { path = "modules/axruntime" }
 axsync = { path = "modules/axsync" }
 axtask = { path = "modules/axtask" }
+axklib-impl = { path = "modules/axklib-impl" }
 
 allocator = { git = "https://github.com/arceos-org/allocator.git", tag = "v0.1.2", features = [
     "axerrno",

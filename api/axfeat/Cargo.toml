@@ -22,7 +22,7 @@ fp-simd = ["axhal/fp-simd"]
 uspace = ["axhal/uspace"]
 
 # Interrupts
-irq = ["axhal/irq", "axruntime/irq", "axtask?/irq", "axdriver?/irq"]
+irq = ["axhal/irq", "axruntime/irq", "axtask?/irq", "axdriver?/irq", "axklib-impl?/irq"]
 ipi = ["irq", "dep:axipi", "axhal/ipi", "axruntime/ipi"]
 
 # Custom or default platforms
@@ -100,7 +100,7 @@ driver-fxmac = ["axdriver?/fxmac"]                          # fxmac ethernet dri
 driver-bcm2835-sdhci = ["axdriver?/bcm2835-sdhci"]
 driver-ahci = ["axdriver?/ahci"]
 
-driver-dyn = ["paging", "axruntime/driver-dyn", "axdriver/dyn"]
+driver-dyn = ["paging", "axruntime/driver-dyn", "axdriver/dyn", "dep:axklib-impl"]
 
 # Backtrace
 dwarf = ["alloc", "axbacktrace/dwarf"]
@@ -120,3 +120,4 @@ axruntime.workspace = true
 axsync = { workspace = true, optional = true }
 axtask = { workspace = true, optional = true }
 kspin = { workspace = true, optional = true }
+axklib-impl = { path = "../../modules/axklib-impl", optional = true }
