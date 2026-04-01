@@ -24,7 +24,7 @@ impl_trait! {
         /// This function forwards the request to `axmm::iomap` and returns the
         /// resulting virtual address wrapped in an `AxResult`.
         fn mem_iomap(addr: PhysAddr, size: usize) -> AxResult<VirtAddr> {
-            axmm::iomap(addr, size)
+            Ok(axmm::iomap(addr, size)?)
         }
 
         /// Busy-wait for the given duration by calling into `axhal`.
